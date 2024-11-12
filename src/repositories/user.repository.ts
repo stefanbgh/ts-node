@@ -76,17 +76,17 @@ export class UserRepository {
 			{ usr_password: new_password },
 			{ where: { usr_id } }
 		);
+
 		return null;
 	}
 
 	async updateVerification(usr_id: number): Promise<null> {
 		await User.update({ usr_verified: true }, { where: { usr_id } });
+
 		return null;
 	}
 
 	async delete(usr_id: number): Promise<void> {
-		await User.destroy({
-			where: { usr_id },
-		});
+		await User.destroy({ where: { usr_id } });
 	}
 }
