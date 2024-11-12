@@ -17,5 +17,6 @@ const imageController = new ImageController(imageService);
 router.post("/", upload.single("img_data"), (req, res) =>
 	imageController.uploadImage(req, res)
 );
+router.get("/:id", (req, res) => imageController.getImage(req, res));
 
 export { router as imageRoutes };
