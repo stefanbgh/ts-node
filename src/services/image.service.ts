@@ -9,13 +9,28 @@ export class ImageService {
 		private userRepository: UserRepository
 	) {}
 
-	async getImage(req: Request): Promise<{ data: string; message: string }> {
+	async getImage(
+		req: Request
+	): Promise<{ data: string | null; message: string }> {
 		const usr_id = Number(req.params.id);
+
+		if (!usr_id) {
+			throw new AppError("The user ID is required", 400);
+		}
+
+		const user = await this.userRepository.findById(usr_id);
+
+		if (!user) {
+			throw new AppError("The user was not found", 404);
+		}
 
 		const image = await this.imageRepository.findByUserId(usr_id);
 
 		if (!image) {
-			throw new AppError("Image not found", 404);
+			return {
+				data: null,
+				message: "Image not found",
+			};
 		}
 
 		return {
@@ -39,7 +54,7 @@ export class ImageService {
 		const user = await this.userRepository.findById(usr_id);
 
 		if (!user) {
-			throw new AppError("The use was not found", 404);
+			throw new AppError("The user was not found", 404);
 		}
 
 		const image = await this.imageRepository.findByUserId(usr_id);
