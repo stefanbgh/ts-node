@@ -1,6 +1,10 @@
+// This is why you need clean code architecture, not to import files, you will get lost in this
 import { Request, Response, NextFunction } from "express";
+
+// If you use Clean code arch you will need to inject it in this service instead require it from other file
 import { AuthService } from "../../services/auth.service";
 
+// Maybe create this as a class
 export const jwtAuth = (
 	req: Request,
 	res: Response,
