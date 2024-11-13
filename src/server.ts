@@ -8,10 +8,12 @@ const server = app.listen(PORT, () => {
 });
 
 const onSignal = async (): Promise<void> => {
+	// Add winston logger
 	console.log("Server is starting cleanup.");
 };
 
 const onShutdown = async (): Promise<void> => {
+	// Add winston logger
 	console.log("Cleanup finished, server is shutting down.");
 };
 
