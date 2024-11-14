@@ -8,7 +8,7 @@
 		"serve": "tsc --build && nodemon src/server.ts"
 	},
 	"keywords": [],
-	"author": "",
+	"author": "Stefan Blagojevic",
 	"license": "ISC",
 	"dependencies": {
 		"@godaddy/terminus": "^4.12.1",
