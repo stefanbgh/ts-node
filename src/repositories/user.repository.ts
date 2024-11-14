@@ -1,4 +1,4 @@
-import User from "../models/User.model";
+import User from "../ts/models/User.model";
 
 import { UserEntity } from "../entities/user.entity";
 import { UserPasswordEntity } from "../entities/userPassword.entity";

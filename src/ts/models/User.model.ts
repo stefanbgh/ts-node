@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../db";
-import { Role } from "../ts/types/Role";
+import { sequelize } from "../../db";
+import { Role } from "../types/Role";
 
 class User extends Model {
 	public usr_id!: number;

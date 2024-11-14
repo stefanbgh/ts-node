@@ -1,6 +1,6 @@
 import { ImageEntity } from "../entities/image.entity";
 
-import Image from "../models/Image.model";
+import Image from "../ts/models/Image.model";
 
 export class ImageRepository {
 	async findByUserId(usr_id: number): Promise<ImageEntity | null> {
