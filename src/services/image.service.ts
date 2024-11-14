@@ -3,10 +3,14 @@ import { Request } from "express";
 import { ImageRepository } from "../repositories/image.repository";
 import { UserRepository } from "../repositories/user.repository";
 
+import { inject, injectable } from "inversify";
+import { TYPES } from "../config/types.config";
+
+@injectable()
 export class ImageService {
 	constructor(
-		private imageRepository: ImageRepository,
-		private userRepository: UserRepository
+		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository,
+		@inject(TYPES.UserRepository) private userRepository: UserRepository
 	) {}
 
 	async getImage(

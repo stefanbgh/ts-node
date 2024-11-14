@@ -2,8 +2,14 @@ import { Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 import { ImageService } from "../services/image.service";
 
+import { inject, injectable } from "inversify";
+import { TYPES } from "../config/types.config";
+
+@injectable()
 export class ImageController {
-	constructor(private imageService: ImageService) {}
+	constructor(
+		@inject(TYPES.ImageService) private imageService: ImageService
+	) {}
 
 	async getImage(req: Request, res: Response): Promise<any> {
 		try {

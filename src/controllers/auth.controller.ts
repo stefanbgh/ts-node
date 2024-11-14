@@ -3,8 +3,12 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
 import { AppError } from "../errors/AppError";
 
+import { inject, injectable } from "inversify";
+import { TYPES } from "../config/types.config";
+
+@injectable()
 export class AuthController {
-	constructor(private authService: AuthService) {}
+	constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
 
 	async register(req: Request, res: Response): Promise<void> {
 		try {

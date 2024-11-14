@@ -6,8 +6,14 @@ import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
 import { AppError } from "../errors/AppError";
 import { Request } from "express";
 
+import { inject, injectable } from "inversify";
+import { TYPES } from "../config/types.config";
+
+@injectable()
 export class UserService {
-	constructor(private userRepository: UserRepository) {}
+	constructor(
+		@inject(TYPES.UserRepository) private userRepository: UserRepository
+	) {}
 
 	async getUsers(): Promise<UserEntity[] | []> {
 		return await this.userRepository.findAll();

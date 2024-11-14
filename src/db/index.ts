@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
 
 import pg from "pg";
-import dbConfig from "../config/index";
+import dbConfig from "../config/db.config";
+
+import { logger } from "../utils/logger";
 
 const { host, username, password, database, port } = dbConfig;
 
@@ -18,10 +20,10 @@ const sequelize = new Sequelize({
 const connectToDb = async () => {
 	try {
 		await sequelize.authenticate();
-		console.log("Successfully connected to DB");
+		logger.info("Successfully connected to DB");
 		await sequelize.sync();
 	} catch (error) {
-		console.log(error);
+		logger.error(`Error connecting to DB: ${error}`);
 	}
 };
 

@@ -13,8 +13,12 @@ import { cookieOptions } from "../constants/cookieOptions.constant";
 import { resetPasswordMail } from "../utils/helpers/resetPasswordMail";
 import { verificationMail } from "./../utils/helpers/verificationMail";
 
+import { inject, injectable } from "inversify";
+import { TYPES } from "../config/types.config";
+
+@injectable()
 export class AuthService {
-	constructor(private userService: UserService) {}
+	constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
 	async register(req: Request): Promise<{ message: string }> {
 		const { usr_name, usr_email, usr_password } = req.body;
@@ -40,7 +44,7 @@ export class AuthService {
 			usr_password: hashedPassword,
 		});
 
-		const token = AuthService.generateToken("verification_token", {
+		const token = this.generateToken("verification_token", {
 			usr_id: user.usr_id,
 			usr_name: user.usr_name,
 		});
@@ -85,14 +89,8 @@ export class AuthService {
 			usr_name: user.usr_name,
 		};
 
-		const accessToken = AuthService.generateToken(
-			"access_token",
-			tokenInfo
-		);
-		const refreshToken = AuthService.generateToken(
-			"refresh_token",
-			tokenInfo
-		);
+		const accessToken = this.generateToken("access_token", tokenInfo);
+		const refreshToken = this.generateToken("refresh_token", tokenInfo);
 
 		res.cookie("jwt", refreshToken, cookieOptions);
 
@@ -129,10 +127,7 @@ export class AuthService {
 			usr_name: user.usr_name,
 		};
 
-		const token = AuthService.generateToken(
-			"reset_password_token",
-			tokenInfo
-		);
+		const token = this.generateToken("reset_password_token", tokenInfo);
 
 		const info = await transporter.sendMail(
 			resetPasswordMail({
@@ -155,10 +150,7 @@ export class AuthService {
 	async resetPasswordToken(req: Request): Promise<{ token: string }> {
 		const { token } = req.params;
 
-		const validateToken = AuthService.verifyToken(
-			"reset_password_token",
-			token
-		);
+		const validateToken = this.verifyToken("reset_password_token", token);
 
 		if (!validateToken) {
 			throw new AppError("Invalid or expired token", 401);
@@ -172,10 +164,7 @@ export class AuthService {
 	async resetPassword(req: Request): Promise<{ message: string }> {
 		const { token, new_password } = req.body;
 
-		const validateToken = AuthService.verifyToken(
-			"reset_password_token",
-			token
-		);
+		const validateToken = this.verifyToken("reset_password_token", token);
 
 		if (!validateToken) {
 			throw new AppError("Invalid or expired token", 401);
@@ -200,10 +189,7 @@ export class AuthService {
 	async verification(req: Request): Promise<{ message: string }> {
 		const { token } = req.params;
 
-		const validateToken = AuthService.verifyToken(
-			"verification_token",
-			token
-		);
+		const validateToken = this.verifyToken("verification_token", token);
 
 		if (!validateToken) {
 			throw new AppError(
@@ -232,7 +218,7 @@ export class AuthService {
 			throw new AppError("Invalid request", 400);
 		}
 
-		const token = AuthService.generateToken("verification_token", {
+		const token = this.generateToken("verification_token", {
 			usr_id: user.usr_id,
 			usr_name: user.usr_name,
 		});
@@ -257,7 +243,7 @@ export class AuthService {
 			throw new AppError("Forbidden", 403);
 		}
 
-		const decoded = AuthService.verifyToken("refresh_token", refreshToken);
+		const decoded = this.verifyToken("refresh_token", refreshToken);
 
 		if (!decoded) {
 			throw new AppError("Forbidden", 403);
@@ -268,17 +254,14 @@ export class AuthService {
 			usr_name: decoded.usr_name,
 		};
 
-		const accessToken = AuthService.generateToken(
-			"access_token",
-			tokenInfo
-		);
+		const accessToken = this.generateToken("access_token", tokenInfo);
 
 		return {
 			accessToken,
 		};
 	}
 
-	static generateToken(type: Token, tokenInfo: ITokenInfo): string {
+	public generateToken(type: Token, tokenInfo: ITokenInfo): string {
 		const { usr_id, usr_name } = tokenInfo;
 
 		if (type === "access_token") {
@@ -320,7 +303,7 @@ export class AuthService {
 		);
 	}
 
-	static verifyToken(type: Token, token: string): IJwtPayload | null {
+	public verifyToken(type: Token, token: string): IJwtPayload | null {
 		try {
 			if (type === "access_token") {
 				return jwt.verify(
