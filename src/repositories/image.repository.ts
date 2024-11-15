@@ -9,11 +9,7 @@ export class ImageRepository {
 		const image = await Image.findOne({ where: { usr_id } });
 
 		if (image) {
-			return {
-				img_id: image.img_id,
-				img_data: image.img_data,
-				usr_id: image.usr_id,
-			};
+			return new ImageEntity(image.usr_id, image.img_data, image.usr_id)
 		}
 
 		return null;
@@ -22,11 +18,7 @@ export class ImageRepository {
 	async createImage(img_data: Buffer, usr_id: number): Promise<ImageEntity> {
 		const newImage = await Image.create({ img_data, usr_id });
 
-		return {
-			img_id: newImage.img_id,
-			img_data: newImage.img_data,
-			usr_id: newImage.usr_id,
-		};
+		return new ImageEntity(newImage.img_id, newImage.img_data, newImage.usr_id);
 	}
 
 	async deleteImage(usr_id: number): Promise<void> {
