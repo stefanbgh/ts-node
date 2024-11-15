@@ -5,6 +5,7 @@ import { UserRepository } from "../repositories/user.repository";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";
+import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 
 @injectable()
 export class ImageService {
@@ -12,11 +13,7 @@ export class ImageService {
 		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository,
 	) {}
 
-	async getImage(
-		req: Request
-	): Promise<{ data: string | null; message: string }> {
-		const usr_id = Number(req.params.id);
-
+	async getImage(usr_id: number): Promise<{ data: string | null; message: string }>{
 		if (!usr_id) {
 			throw new AppError("The user ID is required", 400);
 		}
@@ -36,9 +33,9 @@ export class ImageService {
 		};
 	}
 
-	async uploadImage(req: Request): Promise<any> {
-		const usr_id = Number(req.body.usr_id);
-		const file = req.file;
+	async uploadImage(dto: UploadImageDTO): Promise<any> {
+		const usr_id = Number(dto.usr_id);
+		const file = dto.file;
 
 		if (!file) {
 			throw new AppError("No file uploaded", 400);

@@ -4,6 +4,7 @@ import { ImageService } from "../services/image.service";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";
+import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 
 @injectable()
 export class ImageController {
@@ -13,7 +14,9 @@ export class ImageController {
 
 	async getImage(req: Request, res: Response): Promise<any> {
 		try {
-			const { data, message } = await this.imageService.getImage(req);
+			const usr_id = Number(req.params.id);
+
+			const { data, message } = await this.imageService.getImage(usr_id);
 
 			res.status(200).json({ data, message });
 		} catch (error) {
@@ -28,7 +31,8 @@ export class ImageController {
 
 	async uploadImage(req: Request, res: Response): Promise<void> {
 		try {
-			const { data, message } = await this.imageService.uploadImage(req);
+			const dto: UploadImageDTO = { usr_id: req.body.usr_id, file: req.file }
+			const { data, message } = await this.imageService.uploadImage(dto);
 
 			res.status(201).json({ data, message });
 		} catch (error) {
