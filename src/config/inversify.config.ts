@@ -1,5 +1,6 @@
-import { Container } from "inversify";
+import { Container, ContainerModule, interfaces } from "inversify";
 import { TYPES } from "./types.config";
+import { IBootstrap } from "../ts/interfaces/IBootstrap";
 
 import { JwtAuth } from "../middlewares/jwt";
 import { AuthService } from "../services/auth.service";
@@ -19,24 +20,38 @@ import { Routes } from "../routes";
 import { Middlewares } from "../middlewares";
 import { App } from "../app/app";
 
-const container = new Container();
+const appBindings = new ContainerModule((bind: interfaces.Bind) => {
+    // JWT
+    bind<JwtAuth>(TYPES.JwtAuth).to(JwtAuth);
+    // Auth
+    bind<AuthService>(TYPES.AuthService).to(AuthService);
+    bind<AuthController>(TYPES.AuthController).to(AuthController);
+    bind<AuthRoutes>(TYPES.AuthRoutes).to(AuthRoutes);
+    // User
+    bind<UserRepository>(TYPES.UserRepository).to(UserRepository);
+    bind<UserService>(TYPES.UserService).to(UserService);
+    bind<UserController>(TYPES.UserController).to(UserController);
+    bind<UserRoutes>(TYPES.UserRoutes).to(UserRoutes);
+    // Image
+    bind<ImageRepository>(TYPES.ImageRepository).to(ImageRepository);
+    bind<ImageService>(TYPES.ImageService).to(ImageService);
+    bind<ImageController>(TYPES.ImageController).to(ImageController);
+    bind<ImageRoutes>(TYPES.ImageRoutes).to(ImageRoutes);
+    // 404
+    bind<NotFoundController>(TYPES.NotFoundController).to(NotFoundController);
+    bind<NotFoundRoutes>(TYPES.NotFoundRoutes).to(NotFoundRoutes);
+    // Others
+    bind<Routes>(TYPES.Routes).to(Routes);
+    bind<Middlewares>(TYPES.Middlewares).to(Middlewares);
+    bind<App>(TYPES.App).to(App);
+})
 
-container.bind<JwtAuth>(TYPES.JwtAuth).to(JwtAuth);
-container.bind<AuthService>(TYPES.AuthService).to(AuthService);
-container.bind<AuthController>(TYPES.AuthController).to(AuthController);
-container.bind<AuthRoutes>(TYPES.AuthRoutes).to(AuthRoutes);
-container.bind<UserRepository>(TYPES.UserRepository).to(UserRepository);
-container.bind<UserService>(TYPES.UserService).to(UserService);
-container.bind<UserController>(TYPES.UserController).to(UserController);
-container.bind<UserRoutes>(TYPES.UserRoutes).to(UserRoutes);
-container.bind<ImageRepository>(TYPES.ImageRepository).to(ImageRepository);
-container.bind<ImageService>(TYPES.ImageService).to(ImageService);
-container.bind<ImageController>(TYPES.ImageController).to(ImageController);
-container.bind<ImageRoutes>(TYPES.ImageRoutes).to(ImageRoutes);
-container.bind<NotFoundController>(TYPES.NotFoundController).to(NotFoundController);
-container.bind<NotFoundRoutes>(TYPES.NotFoundRoutes).to(NotFoundRoutes);
-container.bind<Routes>(TYPES.Routes).to(Routes);
-container.bind<Middlewares>(TYPES.Middlewares).to(Middlewares);
-container.bind<App>(TYPES.App).to(App);
+const bootstrap = async(): Promise<IBootstrap> => {
+    const appContainer = new Container();
+    appContainer.load(appBindings);
 
-export { container };
+    const app = appContainer.get<App>(TYPES.App);
+    return { appContainer, app }
+}
+
+export const boot = bootstrap();
