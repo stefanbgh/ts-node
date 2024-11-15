@@ -4,24 +4,25 @@ import bcrypt from "bcrypt";
 
 import { IJwtPayload } from "../ts/interfaces/IJwtPayload";
 import { ITokenInfo } from "../ts/interfaces/ITokenInfo";
+import { RegisterDTO } from "../ts/dtos/RegisterDTO";
+import { LoginDTO } from "../ts/dtos/LoginDTO";
 import { Token } from "../ts/types/Token";
 import { AppError } from "../errors/AppError";
 import { UserService } from "./user.service";
 import { transporter } from "../utils/transporter";
-import { Request, Response } from "express";
-import { cookieOptions } from "../constants/cookieOptions.constant";
 import { resetPasswordMail } from "../utils/helpers/resetPasswordMail";
 import { verificationMail } from "./../utils/helpers/verificationMail";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";
+import { ResetPasswordDTO } from "../ts/dtos/ResetPasswordDTO";
 
 @injectable()
 export class AuthService {
 	constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
-	async register(req: Request): Promise<{ message: string }> {
-		const { usr_name, usr_email, usr_password } = req.body;
+	async register(dto: RegisterDTO): Promise<{ message: string }> {
+		const { usr_name, usr_email, usr_password } = dto;
 
 		if (!usr_name || !usr_email || !usr_password) {
 			throw new AppError("Fields cannot be empty", 400);
@@ -63,8 +64,8 @@ export class AuthService {
 		};
 	}
 
-	async login(req: Request, res: Response): Promise<{ accessToken: string }> {
-		const { usr_email, usr_password } = req.body;
+	async login(dto: LoginDTO): Promise<{ accessToken: string, refreshToken: string }> {
+		const { usr_email, usr_password } = dto;
 		const user = await this.userService.findByEmail(usr_email);
 
 		if (!user) {
@@ -92,30 +93,23 @@ export class AuthService {
 		const accessToken = this.generateToken("access_token", tokenInfo);
 		const refreshToken = this.generateToken("refresh_token", tokenInfo);
 
-		res.cookie("jwt", refreshToken, cookieOptions);
-
 		return {
 			accessToken,
+			refreshToken
 		};
 	}
 
-	async logout(req: Request, res: Response): Promise<{ message: string }> {
-		const refreshToken = req.cookies.jwt;
-
+	async logout(refreshToken: string): Promise<{ message: string }> {
 		if (!refreshToken) {
 			throw new AppError("No active session found", 401);
 		}
-
-		res.clearCookie("jwt", cookieOptions);
 
 		return {
 			message: "Successfully logged out",
 		};
 	}
 
-	async forgotPassword(req: Request): Promise<{ message: string }> {
-		const { usr_email } = req.body;
-
+	async forgotPassword(usr_email: string): Promise<{ message: string }> {
 		const user = await this.userService.findByEmail(usr_email);
 
 		if (!user) {
@@ -147,9 +141,7 @@ export class AuthService {
 		};
 	}
 
-	async resetPasswordToken(req: Request): Promise<{ token: string }> {
-		const { token } = req.params;
-
+	async resetPasswordToken(token: string): Promise<{ token: string }> {
 		const validateToken = this.verifyToken("reset_password_token", token);
 
 		if (!validateToken) {
@@ -161,8 +153,8 @@ export class AuthService {
 		};
 	}
 
-	async resetPassword(req: Request): Promise<{ message: string }> {
-		const { token, new_password } = req.body;
+	async resetPassword(dto: ResetPasswordDTO): Promise<{ message: string }> {
+		const { token, new_password } = dto;
 
 		const validateToken = this.verifyToken("reset_password_token", token);
 
@@ -186,9 +178,7 @@ export class AuthService {
 		};
 	}
 
-	async verification(req: Request): Promise<{ message: string }> {
-		const { token } = req.params;
-
+	async verification(token: string): Promise<{ message: string }> {
 		const validateToken = this.verifyToken("verification_token", token);
 
 		if (!validateToken) {
@@ -205,9 +195,7 @@ export class AuthService {
 		};
 	}
 
-	async resendVerification(req: Request): Promise<{ message: string }> {
-		const { usr_email } = req.body;
-
+	async resendVerification(usr_email: string): Promise<{ message: string }> {
 		const user = await this.userService.findByEmail(usr_email);
 
 		if (!user) {
@@ -236,9 +224,7 @@ export class AuthService {
 		};
 	}
 
-	async refreshToken(req: Request): Promise<{ accessToken: string }> {
-		const refreshToken = req.cookies.jwt;
-
+	async refreshToken(refreshToken: string): Promise<{ accessToken: string }> {
 		if (!refreshToken) {
 			throw new AppError("Forbidden", 403);
 		}

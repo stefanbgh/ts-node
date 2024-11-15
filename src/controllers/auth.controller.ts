@@ -5,6 +5,7 @@ import { AppError } from "../errors/AppError";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";
+import { cookieOptions } from "../constants/cookieOptions.constant";
 
 @injectable()
 export class AuthController {
@@ -12,7 +13,8 @@ export class AuthController {
 
 	async register(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.register(req);
+			const dto = req.body;
+			const { message } = await this.authService.register(dto);
 
 			res.status(201).json({ message });
 		} catch (error) {
@@ -28,8 +30,10 @@ export class AuthController {
 
 	async login(req: Request, res: Response): Promise<void> {
 		try {
-			const { accessToken } = await this.authService.login(req, res);
+			const dto = req.body;
+			const { accessToken, refreshToken } = await this.authService.login(dto);
 
+			res.cookie("jwt", refreshToken, cookieOptions);
 			res.status(200).json({ accessToken });
 		} catch (error) {
 			if (error instanceof AppError) {
@@ -44,8 +48,10 @@ export class AuthController {
 
 	async logout(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.logout(req, res);
+			const refreshToken = req.cookies.jwt;
+			const { message } = await this.authService.logout(refreshToken);
 
+			res.clearCookie("jwt", cookieOptions);
 			res.status(200).send({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
@@ -60,7 +66,8 @@ export class AuthController {
 
 	async forgotPassword(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.forgotPassword(req);
+			const { usr_email } = req.body;
+			const { message } = await this.authService.forgotPassword(usr_email);
 
 			res.status(200).json({ message });
 		} catch (error) {
@@ -76,7 +83,8 @@ export class AuthController {
 
 	async resetPasswordToken(req: Request, res: Response): Promise<void> {
 		try {
-			const { token } = await this.authService.resetPasswordToken(req);
+			const getToken = req.params.token;
+			const { token } = await this.authService.resetPasswordToken(getToken);
 
 			res.status(200).json({ token });
 		} catch (error) {
@@ -92,7 +100,8 @@ export class AuthController {
 
 	async resetPassword(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.resetPassword(req);
+			const dto = req.body;
+			const { message } = await this.authService.resetPassword(dto);
 
 			res.status(200).json({ message });
 		} catch (error) {
@@ -108,7 +117,8 @@ export class AuthController {
 
 	async verification(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.verification(req);
+			const { token } = req.params;
+			const { message } = await this.authService.verification(token);
 
 			res.status(200).json({ message });
 		} catch (error) {
@@ -124,7 +134,8 @@ export class AuthController {
 
 	async resendVerification(req: Request, res: Response): Promise<void> {
 		try {
-			const { message } = await this.authService.resendVerification(req);
+			const { usr_email } = req.body;
+			const { message } = await this.authService.resendVerification(usr_email);
 
 			res.status(200).json({ message });
 		} catch (error) {
@@ -140,7 +151,8 @@ export class AuthController {
 
 	async refreshToken(req: Request, res: Response): Promise<void> {
 		try {
-			const { accessToken } = await this.authService.refreshToken(req);
+			const refreshToken = req.cookies.jwt;
+			const { accessToken } = await this.authService.refreshToken(refreshToken);
 
 			res.status(200).json({ accessToken });
 		} catch (error) {
