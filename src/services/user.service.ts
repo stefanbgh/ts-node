@@ -4,7 +4,6 @@ import { UserPasswordEntity } from "../entities/userPassword.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
 import { AppError } from "../errors/AppError";
-import { Request } from "express";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";
@@ -19,31 +18,31 @@ export class UserService {
 		return await this.userRepository.findAll();
 	}
 
-	async getSingleUser(req: Request): Promise<UserEntity | null> {
-		const usr_id = Number(req.params.id);
+	async getSingleUser(usr_id: number): Promise<UserEntity | null> {
+		if (!usr_id) {
+			throw new AppError("The user ID is required", 400);
+		}
 
 		if (isNaN(usr_id)) {
 			throw new AppError("Invalid user ID", 400);
 		}
 
-		const user = await this.userRepository.findById(usr_id);
-
-		return user;
+		return await this.userRepository.findById(usr_id);
 	}
 
 	async findByEmail(usr_email: string): Promise<UserPasswordEntity | null> {
-		return this.userRepository.findByEmail(usr_email);
+		return await this.userRepository.findByEmail(usr_email);
 	}
 
 	async createUser(dto: CreateUserDTO): Promise<UserEntity> {
-		return this.userRepository.create(dto);
+		return await this.userRepository.create(dto);
 	}
 
 	async updatePassword(dto: UpdatePasswordDTO): Promise<null> {
-		return this.userRepository.updatePassword(dto);
+		return await this.userRepository.updatePassword(dto);
 	}
 
 	async updateVerification(usr_id: number): Promise<null> {
-		return this.userRepository.updateVerification(usr_id);
+		return await this.userRepository.updateVerification(usr_id);
 	}
 }

@@ -1,7 +1,5 @@
 import { AppError } from "../errors/AppError";
-import { Request } from "express";
 import { ImageRepository } from "../repositories/image.repository";
-import { UserRepository } from "../repositories/user.repository";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/types.config";

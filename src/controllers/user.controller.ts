@@ -9,7 +9,7 @@ import { TYPES } from "../config/types.config";
 export class UserController {
 	constructor(@inject(TYPES.UserService) private userService: UserService) {}
 
-	async getUsers(req: Request, res: Response): Promise<void> {
+	async getUsers(_: Request, res: Response): Promise<void> {
 		try {
 			const users = await this.userService.getUsers();
 
@@ -21,7 +21,8 @@ export class UserController {
 
 	async getSingleUser(req: Request, res: Response): Promise<void> {
 		try {
-			const user = await this.userService.getSingleUser(req);
+			const usr_id = Number(req.params.id);
+			const user = await this.userService.getSingleUser(usr_id);
 
 			res.status(200).json({ data: user });
 		} catch (error) {
