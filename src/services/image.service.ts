@@ -10,7 +10,6 @@ import { TYPES } from "../config/types.config";
 export class ImageService {
 	constructor(
 		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository,
-		@inject(TYPES.UserRepository) private userRepository: UserRepository
 	) {}
 
 	async getImage(
@@ -20,12 +19,6 @@ export class ImageService {
 
 		if (!usr_id) {
 			throw new AppError("The user ID is required", 400);
-		}
-
-		const user = await this.userRepository.findById(usr_id);
-
-		if (!user) {
-			throw new AppError("The user was not found", 404);
 		}
 
 		const image = await this.imageRepository.findByUserId(usr_id);
@@ -53,12 +46,6 @@ export class ImageService {
 
 		if (!usr_id) {
 			throw new AppError("The user ID is required", 400);
-		}
-
-		const user = await this.userRepository.findById(usr_id);
-
-		if (!user) {
-			throw new AppError("The user was not found", 404);
 		}
 
 		const image = await this.imageRepository.findByUserId(usr_id);
