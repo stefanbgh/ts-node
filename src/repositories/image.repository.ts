@@ -1,7 +1,9 @@
+import { injectable } from "inversify";
 import { ImageEntity } from "../entities/image.entity";
 
-import Image from "../ts/models/Image.model";
+import Image from "../models/Image.model";
 
+@injectable()
 export class ImageRepository {
 	async findByUserId(usr_id: number): Promise<ImageEntity | null> {
 		const image = await Image.findOne({ where: { usr_id } });

@@ -20,7 +20,7 @@ export class UserService {
 	}
 
 	async getSingleUser(req: Request): Promise<UserEntity | null> {
-		const usr_id = parseInt(req.params.id);
+		const usr_id = Number(req.params.id);
 
 		if (isNaN(usr_id)) {
 			throw new AppError("Invalid user ID", 400);

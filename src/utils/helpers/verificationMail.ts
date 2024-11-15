@@ -17,7 +17,7 @@ export const verificationMail = ({
 		subject,
 		html: `
             <p>Please verify your email by clicking the link below::</p>
-            <p><a href="http://localhost:${process.env.PORT}/api/v1/auth/verification-email/${token}">Verify Email</a></p>
+            <p><a href="http://localhost:${process.env.port}/api/v1/auth/verification-email/${token}">Verify Email</a></p>
         `,
 	};
 };

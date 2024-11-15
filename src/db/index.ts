@@ -1,30 +1,39 @@
 import { Sequelize } from "sequelize";
+import { logger } from "../utils/logger";
+import { injectable } from "inversify";
 
 import pg from "pg";
 import dbConfig from "../config/db.config";
 
-import { logger } from "../utils/logger";
+@injectable()
+export class Database {
+	private sequelize: Sequelize;
 
-const { host, username, password, database, port } = dbConfig;
+	constructor() {
+		const { host, username, password, database, port } = dbConfig;
 
-const sequelize = new Sequelize({
-	dialect: "postgres",
-	host,
-	username,
-	password,
-	database,
-	port,
-	dialectModule: pg,
-});
-
-const connectToDb = async () => {
-	try {
-		await sequelize.authenticate();
-		logger.info("Successfully connected to DB");
-		await sequelize.sync();
-	} catch (error) {
-		logger.error(`Error connecting to DB: ${error}`);
+		this.sequelize = new Sequelize({
+			dialect: "postgres",
+			host,
+			username,
+			password,
+			database,
+			port,
+			dialectModule: pg,
+		});
 	}
-};
 
-export { sequelize, connectToDb };
+	public async connectToDb(): Promise<void> {
+		try {
+			await this.sequelize.authenticate();
+			logger.info("Successfully connected to DB");
+			await this.sequelize.sync();
+		} catch (error) {
+			logger.error(`Error connecting to DB: ${error}`);
+		}
+	}
+
+	public getSequelize(): Sequelize {
+		return this.sequelize;
+	}
+}

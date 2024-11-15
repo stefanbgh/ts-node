@@ -1,18 +1,28 @@
-import express from "express";
+import { Router } from "express";
 
-import { container } from "../config/inversify.config";
 import { TYPES } from "../config/types.config";
 import { ImageController } from "../controllers/image.controller";
+import { inject, injectable } from "inversify";
 
 import upload from "../utils/upload";
 
-const router = express.Router();
+@injectable()
+export class ImageRoutes {
+	private router: Router;
 
-const imageController = container.get<ImageController>(TYPES.ImageController);
+	constructor(
+		@inject(TYPES.ImageController) private imageController: ImageController
+	) {
+		this.router = Router();
+		this.setup();
+	}
 
-router.post("/", upload.single("img_data"), (req, res) =>
-	imageController.uploadImage(req, res)
-);
-router.get("/:id", (req, res) => imageController.getImage(req, res));
+	private setup(): void {
+		this.router.post("/", upload.single("img_data"), (req, res) => this.imageController.uploadImage(req, res) );
+		this.router.get("/:id", (req, res) => this.imageController.getImage(req, res) );
+	}
 
-export { router as imageRoutes };
+	public getRouter(): Router {
+		return this.router;
+	}
+}

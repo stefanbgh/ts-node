@@ -1,33 +1,33 @@
-import express from "express";
+import { Router } from "express";
 
-import { container } from "../config/inversify.config";
 import { TYPES } from "../config/types.config";
 import { AuthController } from "../controllers/auth.controller";
+import { inject, injectable } from "inversify";
 
-const router = express.Router();
+@injectable()
+export class AuthRoutes {
+	private router: Router;
 
-const authController = container.get<AuthController>(TYPES.AuthController);
+	constructor(
+		@inject(TYPES.AuthController) private authController: AuthController
+	) {
+		this.router = Router();
+		this.setup();
+	}
 
-router.post("/register", (req, res) => authController.register(req, res));
-router.post("/login", (req, res) => authController.login(req, res));
-router.post("/logout", (req, res) => authController.logout(req, res));
-router.post("/forgot-password", (req, res) =>
-	authController.forgotPassword(req, res)
-);
-router.get("/reset-password/:token", (req, res) =>
-	authController.resetPasswordToken(req, res)
-);
-router.post("/reset-password", (req, res) =>
-	authController.resetPassword(req, res)
-);
-router.post("/refresh-token", (req, res) =>
-	authController.refreshToken(req, res)
-);
-router.get("/verification-email/:token", (req, res) =>
-	authController.verification(req, res)
-);
-router.post("/resend-verification", (req, res) =>
-	authController.resendVerification(req, res)
-);
+	private setup(): void {
+		this.router.post("/register", (req, res) => this.authController.register(req, res) );
+		this.router.post("/login", (req, res) => this.authController.login(req, res) );
+		this.router.post("/logout", (req, res) => this.authController.logout(req, res) );
+		this.router.post("/forgot-password", (req, res) => this.authController.forgotPassword(req, res) );
+		this.router.get("/reset-password/:token", (req, res) => this.authController.resetPasswordToken(req, res) );
+		this.router.post("/reset-password", (req, res) => this.authController.resetPassword(req, res) );
+		this.router.post("/refresh-token", (req, res) => this.authController.refreshToken(req, res) );
+		this.router.get("/verification-email/:token", (req, res) => this.authController.verification(req, res) );
+		this.router.post("/resend-verification", (req, res) => this.authController.resendVerification(req, res) );
+	}
 
-export { router as authRoutes };
+	public getRouter(): Router {
+		return this.router;
+	}
+}

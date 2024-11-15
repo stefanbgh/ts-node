@@ -1,6 +1,10 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../../db";
-import { Role } from "../types/Role";
+import { Role } from "../ts/types/Role";
+import { Database } from "../db";
+
+import Roles from "./Role.model"; 
+
+const database = new Database();
 
 class User extends Model {
 	public usr_id!: number;
@@ -39,17 +43,23 @@ User.init(
 			defaultValue: false,
 			allowNull: false,
 		},
-		usr_role: {
-			type: DataTypes.ENUM("admin", "user"),
-			defaultValue: "user",
+		rol_id: {
+			type: DataTypes.INTEGER,
 			allowNull: false,
+			references: {
+			  	model: Roles,
+			  	key: "rol_id", 
+			},
+			defaultValue: 1,
 		},
 	},
 	{
-		sequelize,
+		sequelize: database.getSequelize(),
 		tableName: "users",
 		timestamps: false,
 	}
 );
+
+User.belongsTo(Roles, { foreignKey: "rol_id" });
 
 export default User;

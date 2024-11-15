@@ -1,10 +1,12 @@
-import User from "../ts/models/User.model";
+import User from "../models/User.model";
 
 import { UserEntity } from "../entities/user.entity";
 import { UserPasswordEntity } from "../entities/userPassword.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
+import { injectable } from "inversify";
 
+@injectable()
 export class UserRepository {
 	async findAll(): Promise<UserEntity[]> {
 		const users = await User.findAll();

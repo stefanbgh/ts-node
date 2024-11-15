@@ -1,14 +1,26 @@
-import express from "express";
+import { Router } from "express";
 
-import { container } from "../config/inversify.config";
-import { TYPES } from "../config/types.config";
+import { inject, injectable } from "inversify";
 import { UserController } from "../controllers/user.controller";
+import { TYPES } from "../config/types.config";
 
-const router = express.Router();
+@injectable()
+export class UserRoutes {
+	private router: Router;
 
-const userController = container.get<UserController>(TYPES.UserController);
+	constructor(
+		@inject(TYPES.UserController) private userController: UserController
+	) {
+		this.router = Router();
+		this.setup();
+	}
 
-router.get("/", (req, res) => userController.getUsers(req, res));
-router.get("/:id", (req, res) => userController.getSingleUser(req, res));
+	private setup(): void {
+		this.router.get("/", (req, res) => this.userController.getUsers(req, res) );
+		this.router.get("/:id", (req, res) => this.userController.getSingleUser(req, res) );
+	}
 
-export { router as userRoutes };
+	public getRouter(): Router {
+		return this.router;
+	}
+}

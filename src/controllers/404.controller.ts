@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
+import { injectable } from "inversify";
 
+@injectable()
 export class NotFoundController {
 	constructor() {}
 

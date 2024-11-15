@@ -1,5 +1,9 @@
 import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../../db";
+import { Database } from "../db";
+
+import User from "./User.model";
+
+const database = new Database();
 
 class Image extends Model {
 	public img_id!: number;
@@ -22,16 +26,18 @@ Image.init(
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
-				model: "users",
+				model: User,
 				key: "usr_id",
 			},
 		},
 	},
 	{
-		sequelize,
+		sequelize: database.getSequelize(),
 		tableName: "images",
 		timestamps: false,
 	}
 );
+
+Image.belongsTo(User, { foreignKey: "usr_id" });
 
 export default Image;
