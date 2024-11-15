@@ -16,12 +16,13 @@ export class JwtAuth {
 			return;
 		}
 
-		if (this.authService.verifyToken("access_token", token)) {
-			next();
+		const isValid = this.authService.verifyToken("access_token", token);
 
+		if (!isValid) {
+			res.status(401).json({ error: "Invalid or expired token" });
 			return;
 		}
 
-		res.status(401).json({ error: "Invalid or expired token" });
+		next();
 	}
 }
