@@ -32,7 +32,7 @@ Image.init(
 		},
 	},
 	{
-		sequelize: database.getSequelize(),
+		sequelize: database.sequelizeInstance,
 		tableName: "images",
 		timestamps: false,
 	}

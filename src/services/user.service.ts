@@ -1,6 +1,5 @@
 import { UserRepository } from "../repositories/user.repository";
 import { UserEntity } from "../entities/user.entity";
-import { UserPasswordEntity } from "../entities/userPassword.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
 import { AppError } from "../errors/AppError";
@@ -30,7 +29,7 @@ export class UserService {
 		return await this.userRepository.findById(usr_id);
 	}
 
-	async findByEmail(usr_email: string): Promise<UserPasswordEntity | null> {
+	async findByEmail(usr_email: string): Promise<UserEntity | null> {
 		return await this.userRepository.findByEmail(usr_email);
 	}
 

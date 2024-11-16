@@ -12,7 +12,7 @@ class User extends Model {
 	public usr_email!: string;
 	public usr_password!: string;
 	public usr_verified!: boolean;
-	public usr_role!: Role;
+	public rol_id!: Role;
 }
 
 User.init(
@@ -54,7 +54,7 @@ User.init(
 		},
 	},
 	{
-		sequelize: database.getSequelize(),
+		sequelize: database.sequelizeInstance,
 		tableName: "users",
 		timestamps: false,
 	}

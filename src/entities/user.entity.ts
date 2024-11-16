@@ -6,6 +6,11 @@ export class UserEntity {
 		public usr_name: string,
 		public usr_email: string,
 		public usr_verified: boolean,
-		public usr_role: Role
+		public rol_id: Role,
+		private usr_password: string
 	) {}
+
+	get passwordValue(): string {
+		return this.usr_password;
+	}
 }

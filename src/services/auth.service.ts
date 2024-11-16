@@ -78,7 +78,7 @@ export class AuthService {
 
 		const checkPassword = await bcrypt.compare(
 			usr_password,
-			user.getPassword()
+			user.passwordValue
 		);
 
 		if (!checkPassword) {

@@ -1,7 +1,6 @@
 import User from "../models/User.model";
 
 import { UserEntity } from "../entities/user.entity";
-import { UserPasswordEntity } from "../entities/userPassword.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
 import { injectable } from "inversify";
@@ -17,7 +16,8 @@ export class UserRepository {
 					user.usr_name,
 					user.usr_email,
 					user.usr_verified,
-					user.usr_role
+					user.rol_id,
+					user.usr_password
 				)
 		);
 	}
@@ -30,22 +30,23 @@ export class UserRepository {
 				user.usr_name,
 				user.usr_email,
 				user.usr_verified,
-				user.usr_role
+				user.rol_id,
+				user.usr_password
 			);
 		}
 		return null;
 	}
 
-	async findByEmail(usr_email: string): Promise<UserPasswordEntity | null> {
+	async findByEmail(usr_email: string): Promise<UserEntity | null> {
 		const user = await User.findOne({ where: { usr_email } });
 
 		if (user) {
-			return new UserPasswordEntity(
+			return new UserEntity(
 				user.usr_id,
 				user.usr_name,
 				user.usr_email,
 				user.usr_verified,
-				user.usr_role,
+				user.rol_id,
 				user.usr_password
 			);
 		}
@@ -67,7 +68,8 @@ export class UserRepository {
 			user.usr_name,
 			user.usr_email,
 			user.usr_verified,
-			user.usr_role
+			user.rol_id,
+			user.usr_password
 		);
 	}
 

@@ -21,7 +21,7 @@ export class Database {
 		});
 	}
 
-	public async connectToDb(): Promise<void> {
+	async connectToDb(): Promise<void> {
 		try {
 			await this.sequelize.authenticate();
 			logger.info("Successfully connected to DB");
@@ -31,7 +31,7 @@ export class Database {
 		}
 	}
 
-	public getSequelize(): Sequelize {
+	get sequelizeInstance(): Sequelize {
 		return this.sequelize;
 	}
 }
