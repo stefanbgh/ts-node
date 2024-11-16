@@ -28,5 +28,6 @@ declare namespace NodeJS {
 		SMTP_AUTH_PASS: string;
 		// Others
 		PORT: string;
+		RATE_LIMIT_BY_USER: string;
 	}
 }
