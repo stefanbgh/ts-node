@@ -46,7 +46,7 @@ const appBindings = new ContainerModule((bind: interfaces.Bind) => {
     bind<App>(TYPES.App).to(App);
 })
 
-const bootstrap = async(): Promise<IBootstrap> => {
+const bootstrap = (): IBootstrap => {
     const appContainer = new Container();
     appContainer.load(appBindings);
 

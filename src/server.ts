@@ -2,8 +2,8 @@ import "reflect-metadata";
 
 import { boot } from "./config/inversify.config";
 
-const startServer = async() => {
-    const { app } = await boot;
+const startServer = () => {
+    const { app } = boot;
     app.start();
 }
 
