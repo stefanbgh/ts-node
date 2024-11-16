@@ -5,21 +5,21 @@ import { TYPES } from "../config/types.config";
 
 @injectable()
 export class NotFoundRoutes {
-	private router: Router;
+	private notFoundRouter: Router;
 
 	constructor(
 		@inject(TYPES.NotFoundController)
 		private notFoundController: NotFoundController
 	) {
-		this.router = Router();
+		this.notFoundRouter = Router();
 		this.setup();
 	}
 
 	private setup(): void {
-		this.router.get("*", (req, res) => this.notFoundController.notFound(req, res) );
+		this.notFoundRouter.get("*", (req, res) => this.notFoundController.notFound(req, res) );
 	}
 
-	public getRouter(): Router {
-		return this.router;
+	get router(): Router {
+		return this.notFoundRouter;
 	}
 }

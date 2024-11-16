@@ -8,10 +8,12 @@ import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 @injectable()
 export class ImageService {
 	constructor(
-		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository,
+		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository
 	) {}
 
-	async getImage(usr_id: number): Promise<{ data: string | null; message: string }>{
+	async getImage(
+		usr_id: number
+	): Promise<{ data: string | null; message: string }> {
 		if (!usr_id) {
 			throw new AppError("The user ID is required", 400);
 		}
@@ -33,15 +35,7 @@ export class ImageService {
 
 	async uploadImage(dto: UploadImageDTO): Promise<any> {
 		const usr_id = Number(dto.usr_id);
-		const file = dto.file;
-
-		if (!file) {
-			throw new AppError("No file uploaded", 400);
-		}
-
-		if (!usr_id) {
-			throw new AppError("The user ID is required", 400);
-		}
+		const file = dto.file as Express.Multer.File;
 
 		const image = await this.imageRepository.findByUserId(usr_id);
 

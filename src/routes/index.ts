@@ -20,9 +20,11 @@ export class Routes {
 	) {}
 
 	init(app: Express): void {
-		app.use("/api/v1/auth", this.authRoutes.getRouter());
-		app.use("/api/v1/users", this.jwtAuth.authenticate.bind(this.jwtAuth), this.userRoutes.getRouter());
-		app.use("/api/v1/images", this.jwtAuth.authenticate.bind(this.jwtAuth), this.imageRoutes.getRouter());
-		app.use("*", this.notFoundRoutes.getRouter());
+		const authGuard = this.jwtAuth.authenticate.bind(this.jwtAuth);
+
+		app.use("/api/v1/auth", this.authRoutes.router);
+		app.use("/api/v1/users", authGuard, this.userRoutes.router);
+		app.use("/api/v1/images", authGuard, this.imageRoutes.router);
+		app.use("*", this.notFoundRoutes.router);
 	}
 }

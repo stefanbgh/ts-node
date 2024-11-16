@@ -24,10 +24,6 @@ export class AuthService {
 	async register(dto: RegisterDTO): Promise<{ message: string }> {
 		const { usr_name, usr_email, usr_password } = dto;
 
-		if (!usr_name || !usr_email || !usr_password) {
-			throw new AppError("Fields cannot be empty", 400);
-		}
-
 		const checkEmail = await this.userService.findByEmail(usr_email);
 
 		if (checkEmail) {
@@ -64,7 +60,9 @@ export class AuthService {
 		};
 	}
 
-	async login(dto: LoginDTO): Promise<{ accessToken: string, refreshToken: string }> {
+	async login(
+		dto: LoginDTO
+	): Promise<{ accessToken: string; refreshToken: string }> {
 		const { usr_email, usr_password } = dto;
 		const user = await this.userService.findByEmail(usr_email);
 
@@ -95,7 +93,7 @@ export class AuthService {
 
 		return {
 			accessToken,
-			refreshToken
+			refreshToken,
 		};
 	}
 
