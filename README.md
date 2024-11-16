@@ -62,10 +62,11 @@ src/
     ├── config/        // Configuration files (e.g., types, inversify, db) 
     ├── constants/     // Constants used across the app 
     ├── controllers/   // Handles incoming HTTP requests 
-    ├── db/            // Sequalize setup
+    ├── db/            // Sequelize setup
     ├── entities/      // Core data models (e.g., User, Image) 
     ├── errors/        // Error handling and custom error messages 
     ├── middlewares/   // Authentication and validation middleware 
+    ├── models/        // Database models, represents tables in the database
     ├── repositories/  // Database interactions 
     ├── routes/        // API route definitions 
     ├── services/      // Business logic and application services 
