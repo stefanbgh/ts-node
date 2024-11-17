@@ -2,28 +2,34 @@ import { Request, Response } from "express";
 import { UserService } from "../services/user.service";
 import { AppError } from "../errors/AppError";
 
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
+import { Controller, Get, Param, Req, Res, UseBefore } from "routing-controllers";
+import { AuthGuard } from "../middlewares/guard";
 
-@injectable()
+@Controller("/api/v1/users")
 export class UserController {
 	constructor(@inject(UserService) private userService: UserService) {}
 
-	async getUsers(_: Request, res: Response): Promise<void> {
+	@Get("/")
+	@UseBefore(AuthGuard)
+	async getUsers(@Res() res: Response) {
 		try {
 			const users = await this.userService.getUsers();
 
-			res.status(200).json({ data: users });
+			return res.status(200).json({ data: users });
 		} catch (error) {
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async getSingleUser(req: Request, res: Response): Promise<void> {
+	@Get("/:id")
+	@UseBefore(AuthGuard)
+	async getSingleUser(@Param("id") id: string, @Res() res: Response) {
 		try {
-			const usr_id = Number(req.params.id);
+			const usr_id = Number(id);
 			const user = await this.userService.getSingleUser(usr_id);
 
-			res.status(200).json({ data: user });
+			return res.status(200).json({ data: user });
 		} catch (error) {
 			if (error instanceof AppError) {
 				res.status(error.statusCode).json({ message: error.message });
@@ -31,7 +37,7 @@ export class UserController {
 				return;
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 }

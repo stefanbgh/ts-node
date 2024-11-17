@@ -10,6 +10,7 @@ import { ImageController } from "../controllers/image.controller";
 import { appContainer } from "../containers/app.container";
 
 import http from "http";
+import { UserController } from "../controllers/user.controller";
 
 @injectable()
 export class App {
@@ -29,7 +30,7 @@ export class App {
 	private setupRoutes(): void {
 		useContainer(appContainer);
 		useExpressServer(this.app, {
-			controllers: [ImageController],
+			controllers: [UserController, ImageController],
 			middlewares: this.middlewares.init()
 		})
 	}
