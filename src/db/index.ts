@@ -1,9 +1,11 @@
+import { injectable } from "inversify";
 import { Sequelize } from "sequelize";
 import { logger } from "../utils/logger";
 
 import pg from "pg";
 import dbConfig from "../config/db.config";
 
+@injectable()
 export class Database {
 	private sequelize: Sequelize;
 

@@ -1,9 +1,10 @@
+import { dbContainer } from "../containers/db.container";
 import { Model, DataTypes } from "sequelize";
 import { Role } from "../ts/types/Role";
 import { Database } from "../db";
 import { ERole } from "../ts/enums/ERole";
 
-const database = new Database();
+const database = dbContainer.get(Database);
 
 class Roles extends Model {
 	public rol_id!: number;

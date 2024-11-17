@@ -1,10 +1,11 @@
+import { dbContainer } from "../containers/db.container";
 import { Model, DataTypes } from "sequelize";
 import { Role } from "../ts/types/Role";
 import { Database } from "../db";
 
 import Roles from "./Role.model"; 
 
-const database = new Database();
+const database = dbContainer.get(Database);
 
 class User extends Model {
 	public usr_id!: number;

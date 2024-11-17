@@ -1,9 +1,10 @@
+import { dbContainer } from "../containers/db.container";
 import { Model, DataTypes } from "sequelize";
 import { Database } from "../db";
 
 import User from "./User.model";
 
-const database = new Database();
+const database = dbContainer.get(Database);
 
 class Image extends Model {
 	public img_id!: number;
