@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsInt, Min } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class ImageValidator {
 	@IsNotEmpty()

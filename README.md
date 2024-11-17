@@ -59,8 +59,9 @@ Current application version: 1.0.0
 ```
 src/ 
     ├── app/           // Main application logic 
-    ├── config/        // Configuration files (e.g., types, inversify, db) 
+    ├── config/        // Configuration files (e.g., database) 
     ├── constants/     // Constants used across the app 
+    ├── containers/    // InversifyJS bindings for Dependency Injection (DI)
     ├── controllers/   // Handles incoming HTTP requests 
     ├── db/            // Sequelize setup
     ├── entities/      // Core data models (e.g., User, Image) 
@@ -68,7 +69,6 @@ src/
     ├── middlewares/   // Authentication and validation middleware 
     ├── models/        // Database models, represents tables in the database
     ├── repositories/  // Database interactions 
-    ├── routes/        // API route definitions 
     ├── services/      // Business logic and application services 
     ├── smtp/          // SMTP configuration for sending emails 
     ├── ts/            // TS definitions (dtos, interfaces, models, types)
