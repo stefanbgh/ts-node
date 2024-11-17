@@ -1,16 +1,17 @@
 import express, { Express } from "express";
 
-import { createTerminus } from "@godaddy/terminus";
-import { logger } from "../utils/logger";
-import { Port } from "../ts/types/Port";
-import { Middlewares } from "../middlewares";
 import { inject, injectable } from "inversify";
-import { useContainer, useExpressServer } from "routing-controllers";
-import { ImageController } from "../controllers/image.controller";
 import { appContainer } from "../containers/app.container";
+import { useContainer, useExpressServer } from "routing-controllers";
+import { AuthController } from './../controllers/auth.controller';
+import { UserController } from "../controllers/user.controller";
+import { ImageController } from "../controllers/image.controller";
+import { createTerminus } from "@godaddy/terminus";
+import { Middlewares } from "../middlewares";
+import { Port } from "../ts/types/Port";
+import { logger } from "../utils/logger";
 
 import http from "http";
-import { UserController } from "../controllers/user.controller";
 
 @injectable()
 export class App {
@@ -23,15 +24,20 @@ export class App {
 	) {
 		this.app = express();
 		this.port = process.env.PORT;
+		this.setupMiddlewares();
 		this.setupRoutes();
 		this.server = this.listen();
 	}
 
+	private setupMiddlewares(): void {
+		this.middlewares.init(this.app);
+	}
+
 	private setupRoutes(): void {
 		useContainer(appContainer);
+
 		useExpressServer(this.app, {
-			controllers: [UserController, ImageController],
-			middlewares: this.middlewares.init()
+			controllers: [AuthController, UserController, ImageController],
 		})
 	}
 

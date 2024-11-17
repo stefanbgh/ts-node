@@ -3,165 +3,170 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
 import { AppError } from "../errors/AppError";
 
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
 import { cookieOptions } from "../constants/cookieOptions.constant";
+import { Controller, Get, Param, Post, Req, Res, UseBefore } from "routing-controllers";
+import { validateRequest } from "../middlewares/validateRequest";
+import { LoginValidator } from "../utils/validators/login.validator";
+import { RegisterValidator } from "../utils/validators/register.validator";
+import { TokenValidator } from "../utils/validators/token.validator";
+import { EmailValidator } from "../utils/validators/email.validator";
+import { ResetPasswordValidator } from "../utils/validators/resetPassword.validator";
 
-@injectable()
+@Controller("/api/v1/auth")
 export class AuthController {
 	constructor(@inject(AuthService) private authService: AuthService) {}
 
-	async register(req: Request, res: Response): Promise<void> {
+	@Post("/register")
+	@UseBefore(validateRequest(RegisterValidator))
+	async register(@Req() req: Request, @Res() res: Response) {
 		try {
 			const dto = req.body;
 			const { message } = await this.authService.register(dto);
 
-			res.status(201).json({ message });
+			return res.status(201).json({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async login(req: Request, res: Response): Promise<void> {
+	@Post("/login")
+	@UseBefore(validateRequest(LoginValidator))
+	async login(@Req() req: Request, @Res() res: Response) {
 		try {
 			const dto = req.body;
 			const { accessToken, refreshToken } = await this.authService.login(dto);
 
 			res.cookie("jwt", refreshToken, cookieOptions);
-			res.status(200).json({ accessToken });
+
+			return res.status(200).json({ accessToken });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async logout(req: Request, res: Response): Promise<void> {
+	@Post("/logout")
+	@UseBefore(validateRequest(TokenValidator))
+	async logout(@Req() req: Request, @Res() res: Response) {
 		try {
 			const refreshToken = req.cookies.jwt;
 			const { message } = await this.authService.logout(refreshToken);
 
 			res.clearCookie("jwt", cookieOptions);
-			res.status(200).send({ message });
+			
+			return res.status(200).send({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async forgotPassword(req: Request, res: Response): Promise<void> {
+	@Post("/forgot-password")
+	@UseBefore(validateRequest(EmailValidator))
+	async forgotPassword(@Req() req: Request, @Res() res: Response) {
 		try {
 			const { usr_email } = req.body;
 			const { message } = await this.authService.forgotPassword(usr_email);
 
-			res.status(200).json({ message });
+			return res.status(200).json({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async resetPasswordToken(req: Request, res: Response): Promise<void> {
+	@Get("/reset-password/:token")
+	async resetPasswordToken(@Param("token") get_token: string, req: Request, @Res() res: Response) {
 		try {
-			const getToken = req.params.token;
-			const { token } = await this.authService.resetPasswordToken(getToken);
+			const { token } = await this.authService.resetPasswordToken(get_token);
 
-			res.status(200).json({ token });
+			return res.status(200).json({ token });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async resetPassword(req: Request, res: Response): Promise<void> {
+	@Post("/reset-password")
+	@UseBefore(validateRequest(ResetPasswordValidator))
+	async resetPassword(@Req() req: Request, @Res() res: Response) {
 		try {
 			const dto = req.body;
 			const { message } = await this.authService.resetPassword(dto);
 
-			res.status(200).json({ message });
+			return res.status(200).json({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async verification(req: Request, res: Response): Promise<void> {
+	@Get("/verification-email/:token")
+	async verification(@Param("token") token: string, @Res() res: Response) {
 		try {
-			const { token } = req.params;
 			const { message } = await this.authService.verification(token);
 
-			res.status(200).json({ message });
+			return res.status(200).json({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async resendVerification(req: Request, res: Response): Promise<void> {
+	@Post("/resend-verification")
+	@UseBefore(validateRequest(EmailValidator))
+	async resendVerification(@Req() req: Request, @Res() res: Response) {
 		try {
 			const { usr_email } = req.body;
 			const { message } = await this.authService.resendVerification(usr_email);
 
-			res.status(200).json({ message });
+			return res.status(200).json({ message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async refreshToken(req: Request, res: Response): Promise<void> {
+	@Post("/refresh-token")
+	@UseBefore(validateRequest(TokenValidator))
+	async refreshToken(@Req() req: Request, @Res() res: Response) {
 		try {
 			const refreshToken = req.cookies.jwt;
 			const { accessToken } = await this.authService.refreshToken(refreshToken);
 
-			res.status(200).json({ accessToken });
+			return res.status(200).json({ accessToken });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 }
