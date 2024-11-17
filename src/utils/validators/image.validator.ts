@@ -1,10 +1,8 @@
 import { IsNotEmpty, IsInt, Min } from "class-validator";
 
 export class ImageValidator {
-	@IsInt()
-	@Min(1)
 	@IsNotEmpty()
-	usr_id!: number;
+	usr_id!: string;
 
 	@IsNotEmpty()
 	file!: Express.Multer.File;

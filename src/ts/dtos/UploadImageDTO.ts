@@ -1,4 +1,4 @@
 export interface UploadImageDTO {
-    usr_id: number;
+    usr_id: string;
     file: Express.Multer.File | undefined;
 }

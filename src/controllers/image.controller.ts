@@ -2,46 +2,53 @@ import { Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 import { ImageService } from "../services/image.service";
 
-import { inject, injectable } from "inversify";
+import { inject } from "inversify";
 import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
+import { Controller, Get, Param, Post, Req, Res, UseBefore } from "routing-controllers";
+import { validateRequest } from "../middlewares/validateRequest";
+import { ImageValidator } from "../utils/validators/image.validator";
+import { AuthGuard } from "../middlewares/guard";
 
-@injectable()
+import upload from "../utils/upload";
+
+@Controller("/api/v1/images")
 export class ImageController {
 	constructor(
-		@inject(ImageService) private imageService: ImageService
-	) {}
+		@inject(ImageService) private imageService: ImageService,
+	  ) {}
 
-	async getImage(req: Request, res: Response): Promise<any> {
+	@Get("/:id")
+	@UseBefore(AuthGuard)
+	async getImage(@Param("id") usr_id: number, @Res() res: Response) {
 		try {
-			const usr_id = Number(req.params.id);
-
 			const { data, message } = await this.imageService.getImage(usr_id);
 
-			res.status(200).json({ data, message });
+			return res.status(200).json({ data, message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 
-	async uploadImage(req: Request, res: Response): Promise<void> {
+	@Post("/")
+	@UseBefore(AuthGuard)
+	@UseBefore(validateRequest(ImageValidator))
+	@UseBefore(upload.single("img_data"))
+	async uploadImage(@Req() req: Request, @Res() res: Response) {
 		try {
 			const dto: UploadImageDTO = { usr_id: req.body.usr_id, file: req.file }
 			const { data, message } = await this.imageService.uploadImage(dto);
 
-			res.status(201).json({ data, message });
+			return res.status(201).json({ data, message });
 		} catch (error) {
 			if (error instanceof AppError) {
-				res.status(error.statusCode).json({ message: error.message });
-
-				return;
+				return res.status(error.statusCode).json({ message: error.message });
 			}
 
-			res.status(500).json({ message: "Internal server error" });
+			return res.status(500).json({ message: "Internal server error" });
 		}
 	}
 }

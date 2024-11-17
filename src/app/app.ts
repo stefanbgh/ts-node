@@ -3,9 +3,11 @@ import express, { Express } from "express";
 import { createTerminus } from "@godaddy/terminus";
 import { logger } from "../utils/logger";
 import { Port } from "../ts/types/Port";
-import { Routes } from "../routes";
 import { Middlewares } from "../middlewares";
 import { inject, injectable } from "inversify";
+import { useContainer, useExpressServer } from "routing-controllers";
+import { ImageController } from "../controllers/image.controller";
+import { appContainer } from "../containers/app.container";
 
 import http from "http";
 
@@ -16,22 +18,20 @@ export class App {
 	private port: Port;
 
 	constructor(
-		@inject(Routes) private routes: Routes,
 		@inject(Middlewares) private middlewares: Middlewares
 	) {
 		this.app = express();
 		this.port = process.env.PORT;
-		this.setupMiddleware();
 		this.setupRoutes();
 		this.server = this.listen();
 	}
 
-	private setupMiddleware(): void {
-		this.middlewares.init(this.app);
-	}
-
 	private setupRoutes(): void {
-		this.routes.init(this.app);
+		useContainer(appContainer);
+		useExpressServer(this.app, {
+			controllers: [ImageController],
+			middlewares: this.middlewares.init()
+		})
 	}
 
 	private listen(): http.Server {
