@@ -3,11 +3,10 @@ import { UserService } from "../services/user.service";
 import { AppError } from "../errors/AppError";
 
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 
 @injectable()
 export class UserController {
-	constructor(@inject(TYPES.UserService) private userService: UserService) {}
+	constructor(@inject(UserService) private userService: UserService) {}
 
 	async getUsers(_: Request, res: Response): Promise<void> {
 		try {

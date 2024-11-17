@@ -1,10 +1,7 @@
 import "reflect-metadata";
 
-import { boot } from "./config/inversify.config";
+import { appContainer } from "./containers/app.container";
+import { App } from "./app/app";
 
-const startServer = () => {
-    const { app } = boot;
-    app.start();
-}
-
-startServer();
+const app = appContainer.get(App);
+app.start();

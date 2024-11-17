@@ -14,12 +14,11 @@ import { resetPasswordMail } from "../utils/helpers/resetPasswordMail";
 import { verificationMail } from "./../utils/helpers/verificationMail";
 
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 import { ResetPasswordDTO } from "../ts/dtos/ResetPasswordDTO";
 
 @injectable()
 export class AuthService {
-	constructor(@inject(TYPES.UserService) private userService: UserService) {}
+	constructor(@inject(UserService) private userService: UserService) {}
 
 	async register(dto: RegisterDTO): Promise<{ message: string }> {
 		const { usr_name, usr_email, usr_password } = dto;

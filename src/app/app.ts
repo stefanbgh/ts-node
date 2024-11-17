@@ -6,7 +6,6 @@ import { Port } from "../ts/types/Port";
 import { Routes } from "../routes";
 import { Middlewares } from "../middlewares";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 
 import http from "http";
 
@@ -17,8 +16,8 @@ export class App {
 	private port: Port;
 
 	constructor(
-		@inject(TYPES.Routes) private routes: Routes,
-		@inject(TYPES.Middlewares) private middlewares: Middlewares
+		@inject(Routes) private routes: Routes,
+		@inject(Middlewares) private middlewares: Middlewares
 	) {
 		this.app = express();
 		this.port = process.env.PORT;

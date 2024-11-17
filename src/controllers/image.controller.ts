@@ -3,13 +3,12 @@ import { AppError } from "../errors/AppError";
 import { ImageService } from "../services/image.service";
 
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 
 @injectable()
 export class ImageController {
 	constructor(
-		@inject(TYPES.ImageService) private imageService: ImageService
+		@inject(ImageService) private imageService: ImageService
 	) {}
 
 	async getImage(req: Request, res: Response): Promise<any> {

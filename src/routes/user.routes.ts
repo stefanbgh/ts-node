@@ -2,14 +2,13 @@ import { Router } from "express";
 
 import { inject, injectable } from "inversify";
 import { UserController } from "../controllers/user.controller";
-import { TYPES } from "../config/types.config";
 
 @injectable()
 export class UserRoutes {
 	private userRouter: Router;
 
 	constructor(
-		@inject(TYPES.UserController) private userController: UserController
+		@inject(UserController) private userController: UserController
 	) {
 		this.userRouter = Router();
 		this.setup();

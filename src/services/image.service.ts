@@ -2,13 +2,12 @@ import { AppError } from "../errors/AppError";
 import { ImageRepository } from "../repositories/image.repository";
 
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 
 @injectable()
 export class ImageService {
 	constructor(
-		@inject(TYPES.ImageRepository) private imageRepository: ImageRepository
+		@inject(ImageRepository) private imageRepository: ImageRepository
 	) {}
 
 	async getImage(

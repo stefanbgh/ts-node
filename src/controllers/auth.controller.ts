@@ -4,12 +4,11 @@ import { AuthService } from "../services/auth.service";
 import { AppError } from "../errors/AppError";
 
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 import { cookieOptions } from "../constants/cookieOptions.constant";
 
 @injectable()
 export class AuthController {
-	constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
+	constructor(@inject(AuthService) private authService: AuthService) {}
 
 	async register(req: Request, res: Response): Promise<void> {
 		try {

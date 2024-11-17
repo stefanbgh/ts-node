@@ -1,14 +1,13 @@
 import { Router } from "express";
 import { NotFoundController } from "../controllers/404.controller";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../config/types.config";
 
 @injectable()
 export class NotFoundRoutes {
 	private notFoundRouter: Router;
 
 	constructor(
-		@inject(TYPES.NotFoundController)
+		@inject(NotFoundController)
 		private notFoundController: NotFoundController
 	) {
 		this.notFoundRouter = Router();

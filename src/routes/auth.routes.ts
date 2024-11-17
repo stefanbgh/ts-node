@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-import { TYPES } from "../config/types.config";
 import { AuthController } from "../controllers/auth.controller";
 import { inject, injectable } from "inversify";
 import { validateRequest } from "../middlewares/validateRequest";
@@ -15,7 +14,7 @@ export class AuthRoutes {
 	private authRouter: Router;
 
 	constructor(
-		@inject(TYPES.AuthController) private authController: AuthController
+		@inject(AuthController) private authController: AuthController
 	) {
 		this.authRouter = Router();
 		this.setup();

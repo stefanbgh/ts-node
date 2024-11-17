@@ -1,6 +1,5 @@
 import { Router } from "express";
 
-import { TYPES } from "../config/types.config";
 import { ImageController } from "../controllers/image.controller";
 import { inject, injectable } from "inversify";
 
@@ -13,7 +12,7 @@ export class ImageRoutes {
 	private imageRouter: Router;
 
 	constructor(
-		@inject(TYPES.ImageController) private imageController: ImageController
+		@inject(ImageController) private imageController: ImageController
 	) {
 		this.imageRouter = Router();
 		this.setup();
