@@ -7,18 +7,17 @@ import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 import { Controller, Get, Param, Post, Req, Res, UseBefore } from "routing-controllers";
 import { validateRequest } from "../middlewares/validateRequest";
 import { ImageValidator } from "../utils/validators/image.validator";
-import { AuthGuard } from "../middlewares/guard";
+import { BaseController } from "./base.controller";
 
 import upload from "../utils/upload";
 
 @Controller("/api/v1/images")
-export class ImageController {
+export class ImageController implements BaseController {
 	constructor(
 		@inject(ImageService) private imageService: ImageService,
 	  ) {}
 
 	@Get("/:id")
-	@UseBefore(AuthGuard)
 	async getImage(@Param("id") usr_id: number, @Res() res: Response) {
 		try {
 			const { data, message } = await this.imageService.getImage(usr_id);
@@ -34,7 +33,6 @@ export class ImageController {
 	}
 
 	@Post("/")
-	@UseBefore(AuthGuard)
 	@UseBefore(validateRequest(ImageValidator))
 	@UseBefore(upload.single("img_data"))
 	async uploadImage(@Req() req: Request, @Res() res: Response) {

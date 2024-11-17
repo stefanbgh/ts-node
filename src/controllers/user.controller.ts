@@ -1,17 +1,16 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { UserService } from "../services/user.service";
 import { AppError } from "../errors/AppError";
 
 import { inject } from "inversify";
-import { Controller, Get, Param, Req, Res, UseBefore } from "routing-controllers";
-import { AuthGuard } from "../middlewares/guard";
+import { Controller, Get, Param, Res } from "routing-controllers";
+import { BaseController } from "./base.controller";
 
 @Controller("/api/v1/users")
-export class UserController {
+export class UserController implements BaseController {
 	constructor(@inject(UserService) private userService: UserService) {}
 
 	@Get("/")
-	@UseBefore(AuthGuard)
 	async getUsers(@Res() res: Response) {
 		try {
 			const users = await this.userService.getUsers();
@@ -23,7 +22,6 @@ export class UserController {
 	}
 
 	@Get("/:id")
-	@UseBefore(AuthGuard)
 	async getSingleUser(@Param("id") id: string, @Res() res: Response) {
 		try {
 			const usr_id = Number(id);
