@@ -6,6 +6,7 @@ import { useContainer, useExpressServer } from "routing-controllers";
 import { AuthController } from './../controllers/auth.controller';
 import { UserController } from "../controllers/user.controller";
 import { ImageController } from "../controllers/image.controller";
+import { NotFoundController } from "../controllers/404.controller";
 import { createTerminus } from "@godaddy/terminus";
 import { Middlewares } from "../middlewares";
 import { Port } from "../ts/types/Port";
@@ -37,7 +38,7 @@ export class App {
 		useContainer(appContainer);
 
 		useExpressServer(this.app, {
-			controllers: [AuthController, UserController, ImageController],
+			controllers: [AuthController, UserController, ImageController, NotFoundController],
 		})
 	}
 

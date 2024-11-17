@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
-import { injectable } from "inversify";
 
-@injectable()
+import { Controller, Get, Res } from "routing-controllers";
+
+@Controller()
 export class NotFoundController {
 	constructor() {}
 
-	async notFound(_: Request, res: Response): Promise<void> {
-		res.status(404).json({
+	@Get("*")
+	async notFound(@Res() res: Response) {
+		return res.status(404).json({
 			message: "Page not found",
 		});
 	}
