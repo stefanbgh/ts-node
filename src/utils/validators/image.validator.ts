@@ -5,5 +5,5 @@ export class ImageValidator {
 	usr_id!: string;
 
 	@IsNotEmpty()
-	file!: Express.Multer.File;
+	img_data!: Express.Multer.File;
 }

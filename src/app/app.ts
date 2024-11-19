@@ -14,20 +14,20 @@ export class App {
 
 	constructor(
 		@inject(MiddlewaresSetup) private middlewaresSetup: MiddlewaresSetup,
-        @inject(RoutesSetup) private routesSetup: RoutesSetup,
-        @inject(ServerSetup) private serverSetup: ServerSetup,
-        @inject(TerminusSetup) private terminusSetup: TerminusSetup
+		@inject(RoutesSetup) private routesSetup: RoutesSetup,
+		@inject(ServerSetup) private serverSetup: ServerSetup,
+		@inject(TerminusSetup) private terminusSetup: TerminusSetup
 	) {
 		this.app = express();
 		this.port = process.env.PORT;
 	}
 
 	public start(): void {
-        this.middlewaresSetup.init(this.app);
-        this.routesSetup.setup(this.app);
+		this.middlewaresSetup.init(this.app);
+		this.routesSetup.setup(this.app);
 
-        const server = this.serverSetup.create(this.app, this.port);
+		const server = this.serverSetup.create(this.app, this.port);
 
-        this.terminusSetup.setup(server);
-    }
+		this.terminusSetup.setup(server);
+	}
 }
