@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { AppError } from "../errors/AppError";
+import { AppError } from "../frameworks/errors/AppError";
 import { ImageService } from "../services/image.service";
 
 import { inject } from "inversify";
 import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 import { Controller, Get, Param, Post, Req, Res, UseBefore } from "routing-controllers";
-import { validateRequest } from "../middlewares/validateRequest";
+import { validateRequest } from "../frameworks/middlewares/validateRequest";
 import { ImageValidator } from "../utils/validators/image.validator";
 import { BaseController } from "./base.controller";
 

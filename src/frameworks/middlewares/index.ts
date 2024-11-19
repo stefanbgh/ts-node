@@ -6,7 +6,7 @@ import compression from "compression";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import rateLimiter from "../utils/rateLimiter";
+import rateLimiter from "../../utils/rateLimiter";
 
 @injectable()
 export class Middlewares {

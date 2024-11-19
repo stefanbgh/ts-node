@@ -1,4 +1,4 @@
 import nodemailer from "nodemailer";
-import { smtp } from "../smtp";
+import smtpConfig from "../config/smtp.config";
 
-export const transporter = nodemailer.createTransport(smtp);
+export const transporter = nodemailer.createTransport(smtpConfig);

@@ -1,9 +1,9 @@
-import User from "../models/User.model";
-
+import { injectable } from "inversify";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
-import { injectable } from "inversify";
+
+import User from "../models/User.model";
 
 @injectable()
 export class UserRepository {

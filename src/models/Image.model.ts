@@ -1,6 +1,6 @@
 import { dbContainer } from "../containers/db.container";
 import { Model, DataTypes } from "sequelize";
-import { Database } from "../db";
+import { Database } from "../frameworks/db";
 
 import User from "./User.model";
 

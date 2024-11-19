@@ -1,7 +1,7 @@
 import { dbContainer } from "../containers/db.container";
 import { Model, DataTypes } from "sequelize";
 import { Role } from "../ts/types/Role";
-import { Database } from "../db";
+import { Database } from "../frameworks/db";
 
 import Roles from "./Role.model"; 
 

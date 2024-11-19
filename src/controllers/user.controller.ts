@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { UserService } from "../services/user.service";
-import { AppError } from "../errors/AppError";
+import { AppError } from "../frameworks/errors/AppError";
 
 import { inject } from "inversify";
 import { Controller, Get, Param, Res } from "routing-controllers";

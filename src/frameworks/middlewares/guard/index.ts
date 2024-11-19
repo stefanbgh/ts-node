@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 import { JwtAuth } from "../jwt/index";
 import { Middleware } from "routing-controllers";
-import { appContainer } from "../../containers/app.container";
-import { isProtectedRoutes } from "../../utils/helpers/isProtectedRoutes";
+import { appContainer } from "../../../containers/app.container";
+import { isProtectedRoutes } from "../../../utils/helpers/isProtectedRoutes";
 
 @Middleware({ type: "before" })
 export class AuthGuard {

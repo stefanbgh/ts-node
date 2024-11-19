@@ -1,9 +1,8 @@
 import { injectable } from "inversify";
 import { Sequelize } from "sequelize";
-import { logger } from "../utils/logger";
 
 import pg from "pg";
-import dbConfig from "../config/db.config";
+import dbConfig from "../../config/db.config";
 
 @injectable()
 export class Database {
@@ -21,16 +20,6 @@ export class Database {
 			port,
 			dialectModule: pg,
 		});
-	}
-
-	async connectToDb(): Promise<void> {
-		try {
-			await this.sequelize.authenticate();
-			logger.info("Successfully connected to DB");
-			await this.sequelize.sync();
-		} catch (error) {
-			logger.error(`Error connecting to DB: ${error}`);
-		}
 	}
 
 	get sequelizeInstance(): Sequelize {

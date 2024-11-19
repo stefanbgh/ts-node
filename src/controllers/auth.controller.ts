@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 
 import { AuthService } from "../services/auth.service";
-import { AppError } from "../errors/AppError";
+import { AppError } from "../frameworks/errors/AppError";
 
 import { inject } from "inversify";
 import { cookieOptions } from "../constants/cookieOptions.constant";
 import { Controller, Get, Param, Post, Req, Res, UseBefore } from "routing-controllers";
-import { validateRequest } from "../middlewares/validateRequest";
+import { validateRequest } from "../frameworks/middlewares/validateRequest";
 import { LoginValidator } from "../utils/validators/login.validator";
 import { RegisterValidator } from "../utils/validators/register.validator";
 import { TokenValidator } from "../utils/validators/token.validator";

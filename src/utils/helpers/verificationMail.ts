@@ -1,4 +1,5 @@
 import { IMailOptions } from "../../ts/interfaces/IMailOptions";
+import { templateLoader } from "../templateLoader";
 
 interface IProps {
 	to: string;
@@ -11,13 +12,15 @@ export const verificationMail = ({
 	subject,
 	token,
 }: IProps): IMailOptions => {
+	const htmlContent = templateLoader("verificationMail", {
+		port: process.env.PORT,
+		token,
+	});
+
 	return {
 		from: process.env.SMTP_FROM as string,
 		to,
 		subject,
-		html: `
-            <p>Please verify your email by clicking the link below::</p>
-            <p><a href="http://localhost:${process.env.port}/api/v1/auth/verification-email/${token}">Verify Email</a></p>
-        `,
+		html: htmlContent
 	};
 };

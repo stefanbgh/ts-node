@@ -1,7 +1,8 @@
-import { AppError } from "../errors/AppError";
+import { inject, injectable } from "inversify";
+
+import { AppError } from "../frameworks/errors/AppError";
 import { ImageRepository } from "../repositories/image.repository";
 
-import { inject, injectable } from "inversify";
 import { UploadImageDTO } from "../ts/dtos/UploadImageDTO";
 
 @injectable()

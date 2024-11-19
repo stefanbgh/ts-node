@@ -1,20 +1,20 @@
-import jwt from "jsonwebtoken";
-
-import bcrypt from "bcrypt";
+import { inject, injectable } from "inversify";
 
 import { IJwtPayload } from "../ts/interfaces/IJwtPayload";
 import { ITokenInfo } from "../ts/interfaces/ITokenInfo";
 import { RegisterDTO } from "../ts/dtos/RegisterDTO";
 import { LoginDTO } from "../ts/dtos/LoginDTO";
 import { Token } from "../ts/types/Token";
-import { AppError } from "../errors/AppError";
+import { AppError } from "../frameworks/errors/AppError";
 import { UserService } from "./user.service";
 import { transporter } from "../utils/transporter";
 import { resetPasswordMail } from "../utils/helpers/resetPasswordMail";
 import { verificationMail } from "./../utils/helpers/verificationMail";
 
-import { inject, injectable } from "inversify";
 import { ResetPasswordDTO } from "../ts/dtos/ResetPasswordDTO";
+
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 @injectable()
 export class AuthService {

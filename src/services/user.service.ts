@@ -1,10 +1,10 @@
+import { inject, injectable } from "inversify";
+
 import { UserRepository } from "../repositories/user.repository";
 import { UserEntity } from "../entities/user.entity";
 import { CreateUserDTO } from "../ts/dtos/CreateUserDTO";
 import { UpdatePasswordDTO } from "../ts/dtos/UpdatePasswordDTO";
-import { AppError } from "../errors/AppError";
-
-import { inject, injectable } from "inversify";
+import { AppError } from "../frameworks/errors/AppError";
 
 @injectable()
 export class UserService {

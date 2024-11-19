@@ -1,8 +1,8 @@
 import { ContainerModule, interfaces } from "inversify";
 
-import { JwtAuth } from "../../middlewares/jwt";
-import { Middlewares } from "../../middlewares";
-import { AuthGuard } from "../../middlewares/guard";
+import { JwtAuth } from "../../frameworks/middlewares/jwt";
+import { AuthGuard } from "../../frameworks/middlewares/guard";
+import { Middlewares } from "../../frameworks/middlewares";
 import { App } from "../../app/app";
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
