@@ -58,22 +58,20 @@ Current application version: 1.0.0
 ## Project Structure
 ```
 src/ 
-    ├── app/           // Main application logic 
-    ├── config/        // Configuration files (e.g., database) 
-    ├── constants/     // Constants used across the app 
-    ├── containers/    // InversifyJS bindings for Dependency Injection (DI)
-    ├── controllers/   // Handles incoming HTTP requests 
-    ├── db/            // Sequelize setup
-    ├── entities/      // Core data models (e.g., User, Image) 
-    ├── errors/        // Error handling and custom error messages 
-    ├── middlewares/   // Authentication and validation middleware 
-    ├── models/        // Database models, represents tables in the database
-    ├── repositories/  // Database interactions 
-    ├── services/      // Business logic and application services 
-    ├── smtp/          // SMTP configuration for sending emails 
-    ├── ts/            // TS definitions (dtos, interfaces, models, types)
-    ├── utils/         // Helper functions and utilities 
-    └── server.ts      // Express server setup
+    ├── app/                // Main application logic 
+    ├── config/             // Configuration files (db.config, smtp.config) 
+    ├── constants/          // Constants used across the app 
+    ├── containers/         // InversifyJS bindings for Dependency Injection (DI)
+    ├── controllers/        // Handles incoming HTTP requests 
+    ├── entities/           // Core data models (User, Image) 
+    ├── frameworks/         // Infrastructure (db, errors, middlewares, setup)
+    ├── models/             // Database models, represents tables in the database
+    ├── repositories/       // Database interactions 
+    ├── services/           // Business logic and application services 
+    ├── templates/          // Email templates with Handlebars (hbs)
+    ├── ts/                 // TS definitions (dtos, enums, interfaces, types)
+    ├── utils/              // Utilities, helpers, regex and validators
+    └── server.ts           // Express server setup
 ```
 
 ## License
